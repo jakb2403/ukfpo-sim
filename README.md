@@ -1,4 +1,4 @@
-# ukfpo-amy
+# ukfpo-sim
 
 Monte Carlo simulator for UK Foundation Programme (UKFP) allocation: given
 each foundation school's places/competitiveness and your ranked preference
