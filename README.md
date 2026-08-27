@@ -40,7 +40,7 @@ pip install -r requirements.txt
 Every time you want to use it:
 
 ```bash
-cd path/to/ukfpo-amy
+cd path/to/ukfpo-sim
 source .venv/bin/activate
 streamlit run app.py
 ```
