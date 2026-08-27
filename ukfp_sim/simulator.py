@@ -249,6 +249,30 @@ class UKFPSimulator:
             self.run()
         return plot_rank_vs_choice_scatter_plotly(self.result, **kwargs)
 
+    def plot_cumulative(self, **kwargs):
+        """Line chart of cumulative "chance of a top-N choice".
+
+        Runs the simulation first if it hasn't been already. See
+        `ukfp_sim.plotting.plot_cumulative_probability` for options.
+        """
+        from .plotting import plot_cumulative_probability
+
+        if not self.has_run:
+            self.run()
+        return plot_cumulative_probability(self.result, **kwargs)
+
+    def plot_cumulative_plotly(self, **kwargs):
+        """Interactive (Plotly) version of `plot_cumulative`, with hover tooltips.
+
+        Runs the simulation first if it hasn't been already. See
+        `ukfp_sim.plotting_plotly.plot_cumulative_probability_plotly` for options.
+        """
+        from .plotting_plotly import plot_cumulative_probability_plotly
+
+        if not self.has_run:
+            self.run()
+        return plot_cumulative_probability_plotly(self.result, **kwargs)
+
     # ------------------------------------------------------------------
     # Simulation mechanics
     # ------------------------------------------------------------------

@@ -77,6 +77,55 @@ def plot_rank_vs_choice_scatter_plotly(
     return fig
 
 
+def plot_cumulative_probability_plotly(
+    result: SimulationResult,
+    cmap: str = DEFAULT_CMAP,
+) -> go.Figure:
+    """Interactive line chart of cumulative "chance of a top-N choice".
+
+    The point at N=3 is your probability of landing one of your top 3
+    choices - a faster read than the stacked bar chart for "how safe is my
+    list overall?". Markers are coloured to match "Choice N" everywhere
+    else in the app.
+    """
+    summary = result.summary()
+    colors = choice_color_map_hex(result.preferences, cmap)
+
+    fig = go.Figure()
+    fig.add_trace(
+        go.Scatter(
+            x=summary["choice_num"],
+            y=summary["cumulative_pct"],
+            mode="lines+markers",
+            line=dict(color="gray", width=1.5),
+            marker=dict(
+                color=[colors[c] for c in summary["choice_num"]], size=12,
+                line=dict(color="white", width=1),
+            ),
+            customdata=np.column_stack(
+                [summary["foundation_school"], summary["probability_pct"]]
+            ),
+            hovertemplate=(
+                "Top %{x}: %{customdata[0]}<br>"
+                "Cumulative chance: %{y:.1f}%<br>"
+                "This choice alone: %{customdata[1]:.1f}%<extra></extra>"
+            ),
+            showlegend=False,
+        )
+    )
+
+    fig.update_layout(
+        title=f"Chance of Landing Your Top-N Choice ({result.n_runs:,} runs)",
+        xaxis_title="N (top N choices)",
+        yaxis_title="Cumulative Probability (%)",
+        yaxis=dict(range=[0, 105]),
+        margin=dict(t=60, r=20, b=50, l=20),
+        template="plotly_white",
+    )
+    fig.update_xaxes(dtick=1, tickmode="linear")
+    return fig
+
+
 def plot_choice_by_rank_bracket_plotly(
     result: SimulationResult,
     n_bins: int = 10,
@@ -131,4 +180,58 @@ def plot_choice_by_rank_bracket_plotly(
         margin=dict(t=60, r=20, b=50, l=20),
         template="plotly_white",
     )
+    return fig
+
+
+# Two flat, high-contrast colours for the A/B comparison overlay below.
+# Deliberately NOT `choice_color_map_hex`: that map is keyed by choice
+# *position*, which would wrongly suggest "Choice 3" is the same school in
+# both scenarios' lines when the two rankings can differ.
+_SCENARIO_COLORS = ("#1f77b4", "#d62728")  # blue, red
+
+
+def plot_cumulative_comparison_plotly(
+    result_a: SimulationResult,
+    result_b: SimulationResult,
+    label_a: str = "Scenario A",
+    label_b: str = "Scenario B",
+) -> go.Figure:
+    """Overlay the cumulative "chance of top-N" curve for two scenarios.
+
+    Use this to compare two different rankings of the *same* schools (e.g.
+    swapping your 1st/2nd choice) side by side - a rising curve that's
+    higher/further-left is the safer list.
+    """
+    fig = go.Figure()
+    for result, label, color in (
+        (result_a, label_a, _SCENARIO_COLORS[0]),
+        (result_b, label_b, _SCENARIO_COLORS[1]),
+    ):
+        summary = result.summary()
+        fig.add_trace(
+            go.Scatter(
+                x=summary["choice_num"],
+                y=summary["cumulative_pct"],
+                mode="lines+markers",
+                name=label,
+                line=dict(color=color, width=2),
+                marker=dict(color=color, size=9),
+                customdata=summary["foundation_school"],
+                hovertemplate=(
+                    f"{label} - Top " + "%{x}: %{customdata}<br>"
+                    "Cumulative chance: %{y:.1f}%<extra></extra>"
+                ),
+            )
+        )
+
+    fig.update_layout(
+        title="Chance of Landing Your Top-N Choice: Scenario A vs B",
+        xaxis_title="N (top N choices)",
+        yaxis_title="Cumulative Probability (%)",
+        yaxis=dict(range=[0, 105]),
+        legend=dict(title="Scenario"),
+        margin=dict(t=60, r=20, b=50, l=20),
+        template="plotly_white",
+    )
+    fig.update_xaxes(dtick=1, tickmode="linear")
     return fig

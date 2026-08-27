@@ -12,6 +12,19 @@ the results with hoverable/zoomable charts. It runs entirely on your own
 machine - Streamlit just opens a local page in your normal browser, nothing
 is uploaded anywhere.
 
+Decision-support features, beyond the original bar/scatter charts:
+- **Competitiveness colour-coding** on the draggable list itself - each
+  school shows its demand/places ratio and a 🟥🟧🟨🟩 colour (red = most
+  competitive, green = least), so you can see the landscape before you even
+  start ranking.
+- **Cumulative "chance of top-N" chart** - a quick read on "how safe is my
+  list overall?" (e.g. what's my chance of landing one of my top 3?).
+- **Scenario A vs B comparison** - save your current ranking as "Scenario
+  A", tweak it (e.g. swap two schools), run again, save as "Scenario B",
+  and see exactly what changed: headline metric deltas, an overlaid
+  cumulative-chance chart, and a per-school probability table sorted by
+  biggest change - directly answers "should I swap these two?".
+
 ### Setup (once), on macOS
 
 Open Terminal, `cd` into this folder, then:
@@ -58,6 +71,8 @@ sim.plot_bar()                # stacked bar chart: choice vs. rank bracket (matp
 sim.plot_scatter()            # scatter: rank position vs. choice received (matplotlib)
 sim.plot_bar_plotly()         # same charts, interactive/hoverable (used by app.py)
 sim.plot_scatter_plotly()
+sim.plot_cumulative()         # cumulative "chance of top-N" chart (matplotlib)
+sim.plot_cumulative_plotly()  # ...and its interactive version
 sim.rerun()                   # re-run with fresh randomness, same setup
 ```
 

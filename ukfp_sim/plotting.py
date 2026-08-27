@@ -106,6 +106,62 @@ def plot_rank_vs_choice_scatter(
     return fig
 
 
+def plot_cumulative_probability(
+    result: SimulationResult,
+    cmap: str = DEFAULT_CMAP,
+    ax=None,
+    show: bool = True,
+):
+    """Line chart of cumulative "chance of a top-N choice", N = 1..len(preferences).
+
+    Answers "how safe is my list?" more directly than the stacked bar chart:
+    e.g. the point at N=3 is your probability of landing one of your top 3
+    choices. Markers are coloured to match "Choice N" everywhere else.
+
+    Args:
+        result: a `SimulationResult` from `UKFPSimulator.run()`.
+        cmap: matplotlib colormap name used for the choice-number colour scale.
+        ax: existing axes to draw into. A new figure is created if omitted.
+        show: call `plt.show()` before returning (set False when embedding
+            or saving to file without a display).
+
+    Returns:
+        The `matplotlib.figure.Figure` containing the chart.
+    """
+    summary = result.summary()
+    colors = choice_color_map(result.preferences, cmap)
+
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(14, 8))
+    else:
+        fig = ax.figure
+
+    ax.plot(
+        summary["choice_num"], summary["cumulative_pct"],
+        color="gray", linestyle="-", linewidth=1.5, zorder=1,
+    )
+    ax.scatter(
+        summary["choice_num"], summary["cumulative_pct"],
+        c=[colors[c] for c in summary["choice_num"]], s=60, zorder=2,
+    )
+
+    ax.set_ylim(0, 105)
+    ax.set_xticks(summary["choice_num"])
+    ax.set_title(
+        f"Chance of Landing Your Top-N Choice ({result.n_runs:,} runs)",
+        fontsize=14,
+        pad=15,
+    )
+    ax.set_xlabel("N (top N choices)", fontsize=11)
+    ax.set_ylabel("Cumulative Probability (%)", fontsize=11)
+    ax.grid(axis="y", linestyle="--", alpha=0.4)
+    fig.tight_layout()
+
+    if show:
+        plt.show()
+    return fig
+
+
 def plot_choice_by_rank_bracket(
     result: SimulationResult,
     n_bins: int = 10,
