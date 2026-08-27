@@ -1,0 +1,8 @@
+numpy
+pandas
+matplotlib
+
+# For the interactive web app (app.py)
+streamlit
+plotly
+streamlit-sortables
