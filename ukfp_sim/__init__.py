@@ -18,7 +18,16 @@ Typical usage:
 See `ukfp_sim.simulator.UKFPSimulator` for full documentation.
 """
 
-from .data import DEANERY_DATA_2026, EXAMPLE_PREFERENCES_2026, default_deanery_data
+from .data import (
+    DATA_SOURCE_LABEL,
+    DATA_SOURCE_URL,
+    DEANERY_DATA_2026,
+    DEANERY_DATA_BY_YEAR,
+    EXAMPLE_PREFERENCES_2026,
+    LATEST_YEAR,
+    default_deanery_data,
+    deanery_data_for_year,
+)
 from .plotting import (
     plot_choice_by_rank_bracket,
     plot_cumulative_probability,
@@ -36,8 +45,13 @@ __all__ = [
     "UKFPSimulator",
     "SimulationResult",
     "DEANERY_DATA_2026",
+    "DEANERY_DATA_BY_YEAR",
+    "DATA_SOURCE_URL",
+    "DATA_SOURCE_LABEL",
     "EXAMPLE_PREFERENCES_2026",
+    "LATEST_YEAR",
     "default_deanery_data",
+    "deanery_data_for_year",
     "plot_choice_by_rank_bracket",
     "plot_rank_vs_choice_scatter",
     "plot_cumulative_probability",

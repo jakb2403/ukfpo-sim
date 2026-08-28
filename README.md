@@ -24,6 +24,19 @@ Decision-support features, beyond the original bar/scatter charts:
   and see exactly what changed: headline metric deltas, an overlaid
   cumulative-chance chart, and a per-school probability table sorted by
   biggest change - directly answers "should I swap these two?".
+- **First-load instructions popup**, with a disclaimer that this is a
+  simplified statistical model and not a prediction of real applicant
+  behaviour. Reopen it any time via **ℹ️ How to use this app**.
+- **"How the simulation works" popup**, with the maths (Plackett-Luce /
+  Gumbel-max sampling) behind how the synthetic population's 2nd-18th
+  choices are generated, and the disclaimer that it reuses the published
+  1st-choice competition ratios to drive those too, for lack of any
+  published data on later-choice preferences.
+- **Foundation school data year picker** in the sidebar - switch between
+  the published 2024/2025/2026 places and competition ratios (from
+  [`foundation_school_data.csv`](ukfp_sim/foundation_school_data.csv)),
+  with a link to the official source PDF so the figures can be verified.
+  Manual editing of places/ratio is still available under "advanced".
 
 ### Setup (once), on macOS
 
